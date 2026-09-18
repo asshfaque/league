@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premier League | Matches</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1a1a;
+      --bg2: #222;
+      --bg3: #2a2a2a;
+      --card: #1e1e1e;
+      --border: #333;
+      --text: #fff;
+      --muted: #999;
+      --blue: #00a0e3;
+      --green: #00c853;
+      --red: #ff1744;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 1.5rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #37003c, #6b1f7a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      padding: 0.5rem 1.1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--bg3);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active {
+      background: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--text);
+    }
+
+    /* Main */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--bg3);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    /* Matchday Section */
+    .matchday {
+      margin-bottom: 2rem;
+    }
+
+    .matchday-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .matches-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .match-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .match-card:hover {
+      background: var(--bg2);
+      border-color: var(--border);
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .team.home { justify-content: flex-end; text-align: right; }
+    .team.away { justify-content: flex-start; }
+
+    .team-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .team-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: #222;
+      flex-shrink: 0;
+    }
+
+    .score-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      min-width: 80px;
+    }
+
+    .score {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .score span {
+      display: inline-block;
+      min-width: 1.2em;
+      text-align: center;
+    }
+
+    .match-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .status-ft {
+      background: var(--bg3);
+      color: var(--muted);
+    }
+
+    .status-live {
+      background: var(--red);
+      color: #fff;
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-ns {
+      background: var(--bg3);
+      color: var(--blue);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .match-time {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-tabs { display: none; }
+
+      .match-card {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        text-align: center;
+      }
+
+      .team.home,
+      .team.away {
+        justify-content: center;
+      }
+
+      .team.home { order: 1; }
+      .score-box { order: 2; }
+      .team.away { order: 3; }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 1rem; }
+      .header-inner { height: 56px; }
+      .logo-text { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">🦁</div>
+        <span class="logo-text">Premier League</span>
+      </a>
+      <nav class="nav-tabs">
+        <a href="#" class="nav-tab">Overview</a>
+        <a href="#" class="nav-tab active">Matches</a>
+        <a href="#" class="nav-tab">Table</a>
+        <a href="#" class="nav-tab">Stats</a>
+        <a href="#" class="nav-tab">Players</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">Matches</h1>
+      <div class="filters">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Fixtures</button>
+        <button class="filter-btn">Results</button>
+        <button class="filter-btn">Live</button>
+      </div>
+    </div>
+
+    <!-- Matchday 5 -->
+    <div class="matchday">
+      <div class="matchday-title">Matchday 5 · Sat 20 Sep 2026</div>
+      <div class="matches-list">
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Arsenal</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t3.png" alt="Arsenal">
+          </div>
+          <div class="score-box">
+            <div class="score"><span>2</span> - <span>1</span></div>
+            <span class="match-status status-ft">FT</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t43.png" alt="Man City">
+            <span class="team-name">Man City</span>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Liverpool</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t14.png" alt="Liverpool">
+          </div>
+          <div class="score-box">
+            <div class="score"><span>3</span> - <span>0</span></div>
+            <span class="match-status status-ft">FT</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t8.png" alt="Chelsea">
+            <span class="team-name">Chelsea</span>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Man Utd</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t1.png" alt="Man Utd">
+          </div>
+          <div class="score-box">
+            <div class="score"><span>1</span> - <span>1</span></div>
+            <span class="match-status status-ft">FT</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t6.png" alt="Tottenham">
+            <span class="team-name">Tottenham</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Matchday 6 -->
+    <div class="matchday">
+      <div class="matchday-title">Matchday 6 · Sat 27 Sep 2026</div>
+      <div class="matches-list">
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Chelsea</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t8.png" alt="Chelsea">
+          </div>
+          <div class="score-box">
+            <div class="score"><span>1</span> - <span>2</span></div>
+            <span class="match-status status-live">67'</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t3.png" alt="Arsenal">
+            <span class="team-name">Arsenal</span>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Brighton</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t36.png" alt="Brighton">
+          </div>
+          <div class="score-box">
+            <div class="match-time">15:00</div>
+            <span class="match-status status-ns">NS</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t14.png" alt="Liverpool">
+            <span class="team-name">Liverpool</span>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Newcastle</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t4.png" alt="Newcastle">
+          </div>
+          <div class="score-box">
+            <div class="match-time">17:30</div>
+            <span class="match-status status-ns">NS</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t43.png" alt="Man City">
+            <span class="team-name">Man City</span>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Tottenham</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t6.png" alt="Tottenham">
+          </div>
+          <div class="score-box">
+            <div class="match-time">20:00</div>
+            <span class="match-status status-ns">NS</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t1.png" alt="Man Utd">
+            <span class="team-name">Man Utd</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Matchday 7 -->
+    <div class="matchday">
+      <div class="matchday-title">Matchday 7 · Sat 4 Oct 2026</div>
+      <div class="matches-list">
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Man City</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t43.png" alt="Man City">
+          </div>
+          <div class="score-box">
+            <div class="match-time">12:30</div>
+            <span class="match-status status-ns">NS</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t3.png" alt="Arsenal">
+            <span class="team-name">Arsenal</span>
+          </div>
+        </div>
+
+        <div class="match-card">
+          <div class="team home">
+            <span class="team-name">Liverpool</span>
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t14.png" alt="Liverpool">
+          </div>
+          <div class="score-box">
+            <div class="match-time">15:00</div>
+            <span class="match-status status-ns">NS</span>
+          </div>
+          <div class="team away">
+            <img class="team-badge" src="https://resources.premierleague.com/premierleague/badges/t6.png" alt="Tottenham">
+            <span class="team-name">Tottenham</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
