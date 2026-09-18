@@ -108,6 +108,17 @@
       border: 1.5px solid var(--text);
     }
 
+    /* Hide logo + name on phone */
+    @media (max-width: 767px) {
+      .header-top {
+        display: none;
+      }
+
+      .header-inner {
+        padding: 0.5rem 0.75rem;
+      }
+    }
+
     /* Main */
     .container {
       max-width: 1400px;
