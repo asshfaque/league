@@ -103,12 +103,6 @@
       border: 1.5px solid var(--text);
     }
 
-    /* Hide logo on phone */
-    @media (max-width: 767px) {
-      .header-top { display: none; }
-      .header-inner { padding: 0.5rem 0.75rem; }
-    }
-
     /* Main */
     .container {
       max-width: 900px;
@@ -143,6 +137,8 @@
       border: none;
       cursor: pointer;
       white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .stat-tab.active {
@@ -275,12 +271,11 @@
     <h1 class="page-title">Stats</h1>
 
     <div class="stat-tabs">
-      <a href="stats.html"><button class="stat-tab">Goals</button></a>
-      <a href="#"><button class="stat-tab active">Conceded</button></a>
+      <a href="stats.html" class="stat-tab">Goals</a>
+      <a href="#" class="stat-tab active">Conceded</a>
     </div>
 
     <div class="scorers-card">
-      <!-- 1 -->
       <div class="scorer-row">
         <img class="scorer-avatar" src="https://resources.premierleague.com/premierleague/photos/players/250x250/p223094.png" alt="Haaland">
         <div class="scorer-info">
@@ -292,17 +287,8 @@
         </div>
         <span class="scorer-goals">4</span>
       </div>
-
     </div>
   </div>
 
-  <script>
-    document.querySelectorAll('.stat-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.stat-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-      });
-    });
-  </script>
 </body>
 </html>
